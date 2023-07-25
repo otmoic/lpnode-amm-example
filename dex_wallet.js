@@ -1,10 +1,12 @@
+/**
+ * synchronize wallet balance from the Chain, based on this data, you can determine whether there is sufficient balance for cross-chain transactions
+ */
 const { default: axios } = require("axios");
 const _ = require("lodash");
 const dex_wallet = {
   need_sync_tokens: [],
   need_request: [],
   init_wallet: (bridges) => {
-    // const need_sync_tokens = []
     const group_list = _.groupBy(bridges, (item) => {
       return `${item.dstChainId}_${item.dstToken}_${item.wallet_id.toString()}`;
     });
@@ -32,7 +34,7 @@ const dex_wallet = {
       const access_url = `${base_url}/lpnode/get_wallets`;
       const response = await axios.request({ url: access_url, method: "POST" });
       console.log("des token balance info");
-      // console.dir(_.get(response, "data.data", undefined), { depth: 5 });
+      console.dir(_.get(response, "data.data", undefined), { depth: 5 });
     });
     setTimeout(() => {
       dex_wallet.sync_balance();
