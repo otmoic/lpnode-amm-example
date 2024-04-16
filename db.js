@@ -19,23 +19,7 @@ console.log("conn mongo_database:", uri)
 const mongo_client = new mongo_drive.MongoClient(uri);
 const db = {
 	redis: {
-		get_pub_redis: () => {
-			const pub_redis = new Redis({
-				host: redis_host,
-				port: redis_port,
-				password: redis_pass,
-				db: 0,
-				retryStrategy: (times) => {
-					console.error(
-						`redis Host:${redis_host},port:${redis_port} reconnect number ${times}`
-					);
-					const delay = Math.min(times * 50, 1000 * 10);
-					return delay;
-				},
-			});
-			return pub_redis;
-		},
-		get_sub_redis: () => {
+		get_redis_new: () => {
 			const sub_redis = new Redis({
 				host: redis_host,
 				port: redis_port,
@@ -51,7 +35,7 @@ const db = {
 			});
 			return sub_redis;
 		},
-		get_data_redis: (db_index) => {
+		get_redis: (db_index) => {
 			if (data_redis_list.get(db_index)) {
 				return data_redis_list.get(db_index);
 			}

@@ -1,10 +1,11 @@
 const db = require("./db.js");
 const _ = require("lodash");
+// interact with the exchange_adapter program
 const exchangeAdapter = require("./exchange_adapter/exchange_adapter.js")
 class Flow {
 	constructor() {
 		this.bridge_list = [];
-		this.pubredis = db.redis.get_pub_redis();
+		this.pubredis = db.redis.get_redis_new();
 		this.protocal = {
 			origTotalPrice: "",
 			price: "", // return this.calculate(item, price);
@@ -23,7 +24,7 @@ class Flow {
 	}
 	init(bridge_list) {
 		this.bridge_list = bridge_list;
-		const sub_redis = db.redis.get_sub_redis();
+		const sub_redis = db.redis.get_redis_new();
 		sub_redis.on("message", (channel, message) => {
 			this.on_lp_message(channel, message);
 		});
@@ -63,10 +64,12 @@ class Flow {
 	}
 	async fetch_cex_balance() {
 		console.log("fetch cex_balance")
-		await exchangeAdapter.get_cex_spot_balance()
+		// for account retrieval, please refer to resource.js
+		const account_id = "001"
+		await exchangeAdapter.get_cex_spot_balance(account_id)
 		setInterval(() => {
 			this.fetch_cex_balance()
-		}, 10000)
+		}, 1000 * 30)
 	}
 
 	async send_msg(channel, cmd) {
@@ -86,9 +89,12 @@ class Flow {
 			return;
 		}
 		if (received_cmd === "CMD_ASK_QUOTE") {
+			// please retrieve orderbook data and quote according to actual circumstances
 			this.replay_quote(channel, msg);
 		}
 		if (received_cmd === "EVENT_LOCK_QUOTE") {
+			// here, you can opt to perform a reverse operation on the CEX.
+			await exchangeAdapter.spot_order("BUY")
 			this.replay_lock(channel, msg);
 		}
 		if (received_cmd === "EVENT_TRANSFER_OUT") {
@@ -170,7 +176,7 @@ class Flow {
 				native_token_max_number: 0.2763455,
 			},
 		};
-		// console.log("send cmd", cmd);
+		console.log("send cmd", cmd);
 		this.send_msg(channel, cmd);
 	}
 	async replay_lock(channel, lock_msg) {

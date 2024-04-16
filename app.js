@@ -1,6 +1,6 @@
 const _ = require("lodash");
 const db = require("./db.js");
-
+const resource = require("./resource.js")
 const dex_wallet = require("./dex_wallet.js");
 const flow = require("./flow.js");
 /**
@@ -43,6 +43,7 @@ const load_bridges = async () => {
 	bridge_list = bridges;
 };
 const main = async () => {
+	await resource.load_config()
 	/**
 	 * load cross-chain configuration from the database; after loading, basic cross-chain information will be obtained, including original chain token, target chain token, message channel name, and corresponding Chain Evm service address.
 	 */
