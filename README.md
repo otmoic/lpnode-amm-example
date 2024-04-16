@@ -22,7 +22,7 @@ The workflow management portion encompasses the following stages:
 # Quote Structure
 A valid quote structure is as follows:
 
-```Json
+```js
 {
   "origTotalPrice": "",
   "price": "", // return this.calculate(item, price);

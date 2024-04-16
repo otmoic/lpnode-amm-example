@@ -111,6 +111,19 @@ class ExchangeAdapter {
             console.error(e)
         }
     }
+    async get_markets() {
+        try {
+            const url = `http://${MARKET_HOST}:${MARKET_PORT}/api/public/fetchMarkets`
+            console.log("request url:", url)
+            const ret = await axios.request({
+                url,
+                method: "get"
+            })
+            console.log(_.get(ret, "data", {}))
+        } catch (e) {
+            console.error(e)
+        }
+    }
 }
 const exchangeAdapter = new ExchangeAdapter()
 module.exports = exchangeAdapter

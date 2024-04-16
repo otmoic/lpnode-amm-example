@@ -71,6 +71,9 @@ class Flow {
 			this.fetch_cex_balance()
 		}, 1000 * 30)
 	}
+	async fetch_markets(){
+		await exchangeAdapter.get_markets()
+	}
 
 	async send_msg(channel, cmd) {
 		console.info(`send cmd`, channel, _.get(cmd, "cmd", ""));

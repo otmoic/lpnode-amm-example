@@ -57,6 +57,8 @@ const main = async () => {
 	 * periodically refresh orderbook for providing quote support
 	 */
 	flow.fetch_orderbook()
+	// retrieve market trading information for placing orders
+	flow.fetch_markets()
 	/**
 	 * synchronize balance of hedging account in cex
 	 * account needs to be modified in the amm configuration on the otmoic app.
